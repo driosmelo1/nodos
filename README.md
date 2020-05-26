@@ -3,6 +3,8 @@ URL API get que entrega la informacion registrada en nuestro Nodo.
 
 http://142.44.246.66/suma
 
+Entregando la siguiente informacion:  {"total":0,"ip":"181.130.204.81"}
+
 *************************** Montaje En Un Nuevo Proyecto (NODO) ************************************************
 
 Para el montaje de nuestro proyecto en un nuevo nodo o maquina se deben realizar los siguientes pasos.
