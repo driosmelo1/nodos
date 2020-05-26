@@ -1,4 +1,4 @@
-# nodos
+# Nodos
 URL API get que entrega la informacion registrada en nuestro Nodo.
 
 http://142.44.246.66/suma
