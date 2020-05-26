@@ -26,7 +26,7 @@ php artisan key:generate
 
 php artisan cache:clear
 
-Crear una tabla en la base llamada nodos
+Crear una Base en MYSQL llamada nodos.
 
 En laravel en el archivo .env configurar credenciales de la db.
 
