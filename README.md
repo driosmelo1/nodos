@@ -1,9 +1,14 @@
 # Nodos
+
+Nuestra URL de Acceso a nuestra Pagina WEB es:
+
+http://142.44.246.66/
+
 URL API get que entrega la informacion registrada en nuestro Nodo.
 
 http://142.44.246.66/suma
 
-Entregando la siguiente informacion:  {"total":0,"ip":"181.130.204.81"}
+Entregando la siguiente informacion:  {"total":0,"ip":"142.44.246.66"}
 
 *************************** Montaje En Un Nuevo Proyecto (NODO) ************************************************
 
@@ -27,10 +32,15 @@ En laravel en el archivo .env configurar credenciales de la db.
 La configuracion de este proyecto es la siguiente,  vale recordar que cada configuracion depende del MYSQL que tiene cada PC.
 
 DB_CONNECTION=mysql
+
 DB_HOST=127.0.0.1
+
 DB_PORT=3306
+
 DB_DATABASE=nodos
+
 DB_USERNAME=nodos
+
 DB_PASSWORD=Nodos2020*
 
 Luego correr el siguiente comando
