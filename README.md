@@ -23,6 +23,7 @@ composer install
 Luego ejecutamos los siguientes comandos.
 
 php artisan key:generate
+
 php artisan cache:clear
 
 Crear una tabla en la base llamada nodos
@@ -44,6 +45,7 @@ DB_USERNAME=nodos
 DB_PASSWORD=Nodos2020*
 
 Luego correr el siguiente comando
+
 php artisan migrate
 
 **** OJO desde el directorio raiz del proyecto  (c:xampp/htdocs/nodos) ********
@@ -53,6 +55,7 @@ php artisan migrate
 MODELO
 
 Ruta= app/Numero.php
+
 Ruta= app/Server.php
 
 VISTA
@@ -74,6 +77,7 @@ Route::post('/guardarURL', 'NumerosController@guardarURL');
 
 Route::post('/borraURL/{id}/', [
     'as' => 'borraURL', 'uses' => 'NumerosController@borrarURL']);
+    
 Route::get('/suma', 'NumerosController@retornaSumaNumeros');
 
 Route::post('/llamarASuma', 'NumerosController@LlamarServidoresYSumar');
@@ -84,19 +88,32 @@ Route::post('/llamarASuma', 'NumerosController@LlamarServidoresYSumar');
 Manejamos dos Tablas una para guardar el listado de numeros y otra para almacenar el listado de servidores.
 
 TABLA NUMERO
+
 id 
+
 numero
+
 nombre
+
 created_at
+
 updated_at
 
+
 TABLA SERVERS
+
 id
+
 ip
+
 url
+
 YaloConsulte
+
 YameConsulto
+
 created_at
+
 updated_at 
 
 **************************************************************************************************************
@@ -117,7 +134,8 @@ Public function guardarNumeroWeb()
 public function retornaSumaNumeros()
 
 //JSON QUE ENTREGA LA INFORMACION DE LA SUMA DE LOS VALORES ENTREGADOS Y LA IP QUE LO IDENTIFICA
-        return response()->json(['total' => $suma,'ip' => $_SERVER['REMOTE_ADDR'] ]);
+
+return response()->json(['total' => $suma,'ip' => $_SERVER['REMOTE_ADDR'] ]);
 ---------------------------------------------------------------------------------------------------
 
 //Cuando yo consulto a los demas.
