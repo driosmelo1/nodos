@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Server extends Model
 {
     protected $fillable = [
-        'ip', 'url',
+        'url','consultado','yaLoConsulte',
+    ];
+
+    protected $attributes = [
+        'consultado' => '0',
+        'yaLoConsulte' => '0',
     ];
 }

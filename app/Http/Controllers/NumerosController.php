@@ -20,7 +20,6 @@ class NumerosController extends Controller
         foreach ($listadoNumeros as $n) {
             $suma += $n->numero;
         }
-
         $listadoServidores = Server::all();
         return view('index')->with('listadoNumeros', $listadoNumeros)->with('listadoServidores', $listadoServidores)->with('suma',$suma);
     }
@@ -40,7 +39,7 @@ class NumerosController extends Controller
         return redirect('/')->with('listadoNumeros',$listadoNumeros)->with('listadoServidores',$listadoServidores);
     }
 
-    // Metodo que utilizamos cuando nos consultan los valores 
+    // Metodo que utilizamos cuando nos consultan los valores
 
     public function retornaSumaNumeros(Request $request){
 
@@ -57,7 +56,7 @@ class NumerosController extends Controller
         //Saber la ip del server remoto
         $ipCliente = $_SERVER['REMOTE_ADDR'];
 
-        // Recorrido de validacion de consulta de servidores. 
+        // Recorrido de validacion de consulta de servidores.
         foreach ($listadoServidores as $servidor) {
             if(strpos($servidor->url, $ipCliente) !== false){
                 $servidor->yaMeConsulto = 1;

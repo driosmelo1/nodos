@@ -31,34 +31,41 @@
                 <div class="row">
                 <h1>NODOS</h1>
                 </div>
-                <div class="row">
-                    <div class="col-6">
-                        <hr>
-                        <h2>Guardar Numero</h2>
-                        <br>
-                        {{ Form::open(array('url' => '/guardarNumero')) }}
-                            {{Form::label('numero_lbl', 'Ingresa el numero a guardar')}}
-                            <br>
-                            {{Form::number('numero')}}
-                            <br>
-
-                            {{Form::submit('Generar')}}
-                        {{ Form::close() }}
-
+                @if (count($listadoServidores) > 0)
+                <div class="col-6">
+                    <hr>
+                    <h2>Guardar Numero</h2>
                     <br>
-                        <h2>listado Numeros</h2>
-                        <hr>
-                        @if (count($listadoNumeros) > 0)
-                        Cantidad de numeros Guardados: {{count($listadoNumeros)}}
+                    {{ Form::open(array('url' => '/guardarNumero')) }}
+                        {{Form::label('numero_lbl', 'Ingresa el numero a guardar')}}
                         <br>
-                            @foreach ($listadoNumeros as $numero)
-                            id{{$numero->id}} -  Numero:{{$numero->numero}}
-                            <br>
-                            @endforeach
-                        @endif
-                        Total: {{$suma}}
-                    </div>
+                        {{Form::number('numero')}}
+                        <br>
 
+                        {{Form::submit('Generar')}}
+                    {{ Form::close() }}
+
+                <br>
+                    <h2>listado Numeros</h2>
+                    <hr>
+                    @if (count($listadoNumeros) > 0)
+                    Cantidad de numeros Guardados: {{count($listadoNumeros)}}
+                    <br>
+                        @foreach ($listadoNumeros as $numero)
+                        id{{$numero->id}} -  Numero:{{$numero->numero}}
+                        <br>
+                        @endforeach
+                    @endif
+                    Total: {{$suma}}
+                </div>
+                @else
+                <div class="col-6">
+                    <h2>Antes de agregar un numero debes tener al menos este servidor agregado en la lista</h2>
+                </div>
+                @endif
+
+
+                <div class="row">
                     <div class="col-6">
                         <hr>
                         <h2>Guardar nuevo servidor o url para consulta de sumas</h2>
