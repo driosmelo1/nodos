@@ -15,7 +15,7 @@ class CreateServersTable extends Migration
     {
         Schema::create('servers', function (Blueprint $table) {
             $table->id();
-            $table->string('url')->unique()->nullable();
+            $table->string('url')->unique();
             $table->boolean('consultado')->nullable();
             $table->boolean('yaLoConsulte')->nullable();
             $table->timestamps();

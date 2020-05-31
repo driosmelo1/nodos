@@ -109,11 +109,28 @@ class NumerosController extends Controller
     // Metodo que almacen la URL recibida en la base de datos y los imprime en pantalla.
     public function guardarURL(Request $request){
 
-        $nuevoServer = new Server();
+        //toca Recorrer todos los servidores y buscar si ya exite antes de agregar
+        $listadoServidores = Server::all();
+        $existe = false;
+        foreach ($listadoServidores as $servidor) {
+            if($servidor->url == 'http://'.$_SERVER['REMOTE_ADDR'].'/nodos/public/'){
+                $existe = true;
+            }
+        }
 
-        $nuevoServer->url = $request->input('url');
-        $nuevoServer->save();
+        if(!$existe){
+            //guardar si no existe
+            $nuevoServer = new Server();
+            $nuevoServer->url = $request->input('url');
+            $nuevoServer->save();    $nuevoServer->save();
+        }else{
+            print("Ya existe el servidor, no se agrega");
+        }
 
+
+
+
+        //retornar a la pagina con listado completo
         $listadoNumeros = Numero::all();
         $listadoServidores = Server::all();
         return redirect('/')->with('listadoNumeros',$listadoNumeros)->with('listadoServidores',$listadoServidores);
@@ -123,7 +140,7 @@ class NumerosController extends Controller
 
     public function borrarURL(int $id){
 
-        $serverABorrar = Server::get($id);
+        $serverABorrar = Server::find($id);
 
         $serverABorrar->delete();
 

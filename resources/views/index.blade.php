@@ -25,6 +25,8 @@
         </style>
     </head>
     <body>
+        ip de este nodo:
+        {{$_SERVER['REMOTE_ADDR']}}
         <div class="flex-center position-ref full-height">
 
             <div class="container-fluid">
@@ -61,6 +63,14 @@
                 @else
                 <div class="col-6">
                     <h2>Antes de agregar un numero debes tener al menos este servidor agregado en la lista</h2>
+                    {{ Form::open(array('url' => '/guardarURL')) }}
+                            {{Form::label('url_lbl', 'Agregar '.$_SERVER['REMOTE_ADDR']. 'a la lista')}}
+                            <br>
+                            {{Form::text('url','http://'.$_SERVER['REMOTE_ADDR'].'/nodos/public/')}}
+                            <br>
+
+                            {{Form::submit('Guardase a si mismo')}}
+                        {{ Form::close() }}
                 </div>
                 @endif
 
@@ -86,8 +96,8 @@
                         Cantidad de Servidores Guardados: {{count($listadoServidores)}}
                         <br>
                             @foreach ($listadoServidores as $servidor)
-                            id{{$servidor->id}} -URL:{{$servidor->url}}
-                            <a class="btn btn-danger" href="">Borrar</a>
+                            id: {{$servidor->id}} -URL:{{$servidor->url}}
+                            <a  class="btn btn-danger" href="{{ url('/borraURL/'.$servidor->id.'/') }}">eliminar</a>
                             <br>
                             @endforeach
                         @endif

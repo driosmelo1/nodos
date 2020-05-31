@@ -18,7 +18,7 @@ Route::post('/guardarNumero', 'NumerosController@guardarNumeroWeb');
 
 Route::post('/guardarURL', 'NumerosController@guardarURL');
 //Route::get('/borraURL', 'NumerosController@borrarURL');
-Route::post('/borraURL/{id}/', [
+Route::get('/borraURL/{id}/', [
     'as' => 'borraURL', 'uses' => 'NumerosController@borrarURL']);
 Route::get('/suma', 'NumerosController@retornaSumaNumeros');
 
