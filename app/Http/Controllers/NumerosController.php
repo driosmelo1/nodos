@@ -116,13 +116,15 @@ class NumerosController extends Controller
         foreach ($listadoServidores as $servidor) {
             if($servidor->url == 'http://'.$_SERVER['REMOTE_ADDR'].'/nodos/public/'){
                 $existe = true;
+            }else{
+                //llamar a los otros servidores
+                $client = new \GuzzleHttp\Client();
+                $body['name'] = "Agregar Servidor A Otros";
+                $body['url'] = $urlAAgregar;
+                $response = $client->request("POST", $servidor->url, ['form_params'=>$body]);
+                $response = $client->send($response);
             }
-            //llamar a los otros servidores
-            $client = new \GuzzleHttp\Client();
-            $body['name'] = "Agregar Servidor A Otros";
-            $body['url'] = $urlAAgregar;
-            $response = $client->request("POST", $servidor->url, ['form_params'=>$body]);
-            $response = $client->send($response);
+
 
         }
         //comprobar si es la misma ip local
