@@ -108,6 +108,7 @@ class NumerosController extends Controller
 
     // Metodo que almacen la URL recibida en la base de datos y los imprime en pantalla.
     public function guardarURL(Request $request){
+        $urlAAgregar = $body['url'] = $request->input('url');
 
         //toca Recorrer todos los servidores y buscar si ya exite antes de agregar
         $listadoServidores = Server::all();
@@ -116,15 +117,24 @@ class NumerosController extends Controller
             if($servidor->url == 'http://'.$_SERVER['REMOTE_ADDR'].'/nodos/public/'){
                 $existe = true;
             }
-        }
+            //llamar a los otros servidores
+            $client = new \GuzzleHttp\Client();
+            $body['name'] = "Agregar Servidor A Otros";
+            $body['url'] = $urlAAgregar;
+            $response = $client->request("POST", $servidor->url, ['form_params'=>$body]);
+            $response = $client->send($response);
 
-        if(!$existe){
-            //guardar si no existe
-            $nuevoServer = new Server();
-            $nuevoServer->url = $request->input('url');
-            $nuevoServer->save();    $nuevoServer->save();
-        }else{
-            print("Ya existe el servidor, no se agrega");
+        }
+        //comprobar si es la misma ip local
+        if('http://'.($_SERVER['REMOTE_ADDR'].'/nodos/public/') != $urlAAgregar){
+            if(!$existe){
+                //guardar si no existe
+                $nuevoServer = new Server();
+                $nuevoServer->url = $request->input('url');
+                $nuevoServer->save();    $nuevoServer->save();
+            }else{
+                print("Ya existe el servidor, no se agrega");
+            }
         }
 
 
