@@ -16,7 +16,8 @@ Route::get('/', 'NumerosController@index');
 
 Route::post('/guardarNumero', 'NumerosController@guardarNumeroWeb');
 
-Route::post('/guardarURL', 'NumerosController@guardarURL');
+Route::POST('/guardarURL', 'NumerosController@guardarURL');
+Route::get('/guardarNuevoNodo/{ip}/', 'NumerosController@guardarNuevoNodo');
 //Route::get('/borraURL', 'NumerosController@borrarURL');
 Route::get('/borraURL/{id}/', [
     'as' => 'borraURL', 'uses' => 'NumerosController@borrarURL']);

@@ -6,6 +6,7 @@ use App\Numero;
 use App\Server;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Ixudra\Curl\Facades\Curl;
 
 
 // Metodo que utilizamos para Mostrar los numeros que se ingresaron por los usuarios
@@ -108,45 +109,58 @@ class NumerosController extends Controller
 
     // Metodo que almacen la URL recibida en la base de datos y los imprime en pantalla.
     public function guardarURL(Request $request){
-        $urlAAgregar = $body['url'] = $request->input('url');
+
+        $urlAAgregar = $request->input('url');
 
         //toca Recorrer todos los servidores y buscar si ya exite antes de agregar
         $listadoServidores = Server::all();
         $existe = false;
         foreach ($listadoServidores as $servidor) {
-            if($servidor->url == 'http://'.$_SERVER['REMOTE_ADDR'].'/nodos/public/'){
+            if($servidor->url == $urlAAgregar){
                 $existe = true;
-            }else{
-                //llamar a los otros servidores
-                $client = new \GuzzleHttp\Client();
-                $body['name'] = "Agregar Servidor A Otros";
-                $body['url'] = $urlAAgregar;
-                $response = $client->request("POST", $servidor->url, ['form_params'=>$body]);
-                $response = $client->send($response);
-            }
-
-
-        }
-        //comprobar si es la misma ip local
-        if('http://'.($_SERVER['REMOTE_ADDR'].'/nodos/public/') != $urlAAgregar){
-            if(!$existe){
-                //guardar si no existe
-                $nuevoServer = new Server();
-                $nuevoServer->url = $request->input('url');
-                $nuevoServer->save();    $nuevoServer->save();
-            }else{
-                print("Ya existe el servidor, no se agrega");
             }
         }
 
+        if(!$existe){
+            //guardar si no existe
+            $nuevoServer = new Server();
+            $nuevoServer->url = $request->input('url');
+            $nuevoServer->save();
+        }else{
+            print("Ya existe el servidor, no se agrega");
+        }
+
+        foreach ($listadoServidores as $servidor) {
+            if('http://'.$_SERVER['REMOTE_ADDR'].'/nodos/public/' != $servidor->url){
 
 
+                if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $servidor->url, $ip_match)) {
+                    $ip = $ip_match[0];
+                }
+                $response = Curl::to($servidor->url.'guardarNuevoNodo/'.$ip.'/')
+                ->get();
+                dd($response);
+            }
+        }
 
-        //retornar a la pagina con listado completo
+       //retornar a la pagina con listado completo
         $listadoNumeros = Numero::all();
         $listadoServidores = Server::all();
         return redirect('/')->with('listadoNumeros',$listadoNumeros)->with('listadoServidores',$listadoServidores);
     }
+
+    // Metodo que almacen la URL recibida en la base de datos y los imprime en pantalla.
+    public function guardarNuevoNodo(string $ip){
+
+        $url = 'http://'.$ip.'/nodos/public/';
+        //guardar si no existe
+        $nuevoServer = new Server();
+        $nuevoServer->url = $url;
+        $nuevoServer->save();
+
+        dd("OK");
+    }
+
     // Funcion que Elimina Las URL almacenadas en nuestra base de datos, Como Vecinos.
     //Retorna en Pantalla Las URl de Los Servidores Almacenados.
 
