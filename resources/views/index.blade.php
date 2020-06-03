@@ -21,13 +21,12 @@
                 height: 100vh;
                 margin: 0;
             }
+            .footer {
+
 
         </style>
     </head>
     <body>
-        ip de este nodo:
-        {{$_SERVER['REMOTE_ADDR']}}
-
         <div class="flex-center position-ref full-height">
             <h1 style="text-align: center">NODOS</h1>
             <div class="container-fluid">
@@ -54,7 +53,7 @@
                                     @endfor
                                 </select>
                                 <br>
-                                {{Form::submit('Generar')}}
+                                {{Form::submit('Generar', ['class' => 'btn btn-primary'])}}
                             {{ Form::close() }}
                             <br>
                             <h2>listado Numeros</h2>
@@ -86,7 +85,7 @@
                                     {{Form::text('url','http://'.$_SERVER['REMOTE_ADDR'].'/nodos/public/')}}
                                     <br>
 
-                                    {{Form::submit('Guardase a si mismo')}}
+                                    {{Form::submit('Guardase a si mismo', ['class' => 'btn btn-primary'])}}
                                 {{ Form::close() }}
                         @endif
                     </div>
@@ -100,7 +99,7 @@
                             {{Form::text('url')}}
                             <br>
 
-                            {{Form::submit('Guardar')}}
+                            {{Form::submit('Guardar', ['class' => 'btn btn-primary'])}}
                         {{ Form::close() }}
 
                         <br>
@@ -110,19 +109,24 @@
                         Cantidad de Servidores Guardados: {{count($listadoServidores)}}
                         <br>
                             @foreach ($listadoServidores as $servidor)
-                            id: {{$servidor->id}} -URL:{{$servidor->url}}
+                            id:{{$servidor->id}}  --  URL:{{$servidor->url}} --  Consultado:@if ($servidor->consultado == 1)
+                                <input type="checkbox" name="Consultado" value="Consultado" checked>
+                            @else
+                                <input type="checkbox" name="Consultado" value="Consultado">
+                            @endif   --
                             <a  class="btn btn-danger" href="{{ url('/borraURL/'.$servidor->id.'/') }}">eliminar</a>
                             <br>
                             @endforeach
                         @endif
                         <h2>solicitar y sumar</h2>
                         <hr>
-                        {{ Form::open(array('url' => '/llamarASuma')) }}
-                            {{Form::submit('GO')}}
-                        {{ Form::close() }}
+                        <a  class="btn btn-success" href="{{ url('/llamarASuma/') }}">GO</a>
                     </div>
                 </div>
             </div>
         </div>
     </body>
+    <footer>
+        <a  class="btn btn-danger" href="{{ url('/reset/') }}">Resetear OJO</a>
+    </footer>
 </html>

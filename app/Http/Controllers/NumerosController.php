@@ -7,7 +7,7 @@ use App\Server;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Ixudra\Curl\Facades\Curl;
-
+use Illuminate\Support\Facades\DB;
 
 // Metodo que utilizamos para Mostrar los numeros que se ingresaron por los usuarios
 
@@ -54,6 +54,16 @@ class NumerosController extends Controller
             ->with('suma',$suma)
             ->with('mostrarNumeroNodo',$mostrarNumeroNodo);
     }
+    public function ConsultarNodoAPI(Request $request){
+        $NodosASumar = Numero::where('nodo', $request->input('nodo'))->get();
+        $suma = 0;
+        foreach ($NodosASumar as $nodo) {
+            $suma += $nodo->numero;
+        }
+        $listadoServidores = Server::all();
+        $mostrarNumeroNodo = true;
+        return response()->json(['suma' => $suma]);
+    }
 
     // Metodo que utilizamos cuando nos consultan los valores
 
@@ -97,6 +107,19 @@ class NumerosController extends Controller
 
         $listadoServidores = Server::all();
         $total = 0;
+
+        for ($i=1; $i < count($listadoServidores)+1 ; $i++) {
+            $listadoServidores[$i-1]->consultado = 1;
+            $listadoServidores[$i-1]->save();
+            $sumatoria[$i] = 0;
+            $NodosASumar = Numero::where('nodo', $i)->get();
+            foreach ($NodosASumar as $nodo) {
+                $sumatoria[$i] += $nodo->numero;
+                $total += $nodo->numero;
+            }
+        }
+
+        /*
         foreach ($listadoServidores as $servidor) {
             if($servidor->yaLoConsulte == 1)
                 print("Servidor Consultado Anteriormente -> ");
@@ -106,7 +129,6 @@ class NumerosController extends Controller
            // JSON QUE RECIBE LA INFORMACION DE LAS URL ALMACENADAS
             $response = Http::get($servidor->url)['total'];
             $total += floatval ($response);
-            print("Respuesta Servidor ".$response."<br>");
         }
 
         //Falta sumarme a mi mismo
@@ -115,11 +137,8 @@ class NumerosController extends Controller
         foreach ($listadoNumeros as $n) {
             $suma += $n->numero;
         }
-        print("<br>");
-        print("Valor Sin Sumar el Local: ".$total."<br>");
-        print("Valor Local: ".$suma."<br>");
-        print("<br>");
-        print("Valor Total Final: ".($total+$suma));
+        */
+        return response()->json(['total' => $total, 'listado por nodo:' => $sumatoria ]);
     }
 
     // Metodo que almacen la URL recibida en la base de datos y los imprime en pantalla.
@@ -128,34 +147,17 @@ class NumerosController extends Controller
         $urlAAgregar = $request->input('url');
 
         //toca Recorrer todos los servidores y buscar si ya exite antes de agregar
+        //guardar si no existe
+        $nuevoServer = new Server();
+        $nuevoServer->url = $request->input('url');
+        $nuevoServer->save();
+
         $listadoServidores = Server::all();
-        $existe = false;
         foreach ($listadoServidores as $servidor) {
-            if($servidor->url == $urlAAgregar){
-                $existe = true;
-            }
-        }
-
-        if(!$existe){
-            //guardar si no existe
-            $nuevoServer = new Server();
-            $nuevoServer->url = $request->input('url');
-            $nuevoServer->save();
-        }else{
-            print("Ya existe el servidor, no se agrega");
-        }
-
-        foreach ($listadoServidores as $servidor) {
-            if('http://'.$_SERVER['REMOTE_ADDR'].'/nodos/public/' != $servidor->url){
-
-
-                if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $servidor->url, $ip_match)) {
-                    $ip = $ip_match[0];
-                }
-                $response = Curl::to($servidor->url.'guardarNuevoNodo/'.$ip.'/')
-                ->get();
-                dd($response);
-            }
+            $nuevoServer2 = new Server();
+            $nuevoServer2->setConnection('mysql2');
+            $nuevoServer2->url = $request->input('url');
+            $nuevoServer2->save();
         }
 
        //retornar a la pagina con listado completo
@@ -172,7 +174,6 @@ class NumerosController extends Controller
         $nuevoServer->url = $url;
         $nuevoServer->save();
 
-        dd("OK");
     }
 
     // Funcion que Elimina Las URL almacenadas en nuestra base de datos, Como Vecinos.

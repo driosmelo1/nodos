@@ -22,9 +22,20 @@ Route::get('/guardarNuevoNodo/{ip}/', 'NumerosController@guardarNuevoNodo');
 
 Route::get('/ConsultarNodo', 'NumerosController@ConsultarNodo');
 
+Route::get('/ConsultarNodoAPI', 'NumerosController@ConsultarNodoAPI');
+
 Route::get('/borraURL/{id}/', [
     'as' => 'borraURL', 'uses' => 'NumerosController@borrarURL']);
 Route::get('/suma', 'NumerosController@retornaSumaNumeros');
 
-Route::post('/llamarASuma', 'NumerosController@LlamarServidoresYSumar');
+Route::get('/llamarASuma', 'NumerosController@LlamarServidoresYSumar');
+
+
+//resetear
+Route::get('/reset', function()
+{
+    Artisan::call('migrate:fresh');
+    return redirect('/');
+    //
+});
 
