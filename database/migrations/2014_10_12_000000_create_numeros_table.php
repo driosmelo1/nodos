@@ -17,7 +17,6 @@ class CreateNumerosTable extends Migration
             $table->id();
             $table->integer('nodo');
             $table->float('numero');
-            $table->string('nombre')->unique()->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateNumerosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('numeros');
     }
 }
