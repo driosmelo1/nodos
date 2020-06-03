@@ -34,6 +34,21 @@ class NumerosController extends Controller
         $numeroNuevo->save();
 
         $listadoServidores = Server::all();
+
+        $numeroNuevo2 = new Numero();
+        $numeroNuevo2->setConnection('mysql2');
+        $numeroNuevo2->nodo = $request->input('nodoSeleccionado');
+        $numeroNuevo2->numero = $request->input('numero');
+        $numeroNuevo2->save();
+
+
+        $numeroNuevo3 = new Numero();
+        $numeroNuevo3->setConnection('mysql3');
+        $numeroNuevo3->nodo = $request->input('nodoSeleccionado');
+        $numeroNuevo3->numero = $request->input('numero');
+        $numeroNuevo3->save();
+
+        $listadoServidores = Server::all();
         $mostrarNumeroNodo = false;
         return redirect('/')
             ->with('listadoServidores',$listadoServidores)
@@ -153,12 +168,16 @@ class NumerosController extends Controller
         $nuevoServer->save();
 
         $listadoServidores = Server::all();
-        foreach ($listadoServidores as $servidor) {
-            $nuevoServer2 = new Server();
-            $nuevoServer2->setConnection('mysql2');
-            $nuevoServer2->url = $request->input('url');
-            $nuevoServer2->save();
-        }
+
+        $nuevoServer2 = new Server();
+        $nuevoServer2->setConnection('mysql2');
+        $nuevoServer2->url = $request->input('url');
+        $nuevoServer2->save();
+
+        $nuevoServer3 = new Server();
+        $nuevoServer3->setConnection('mysql3');
+        $nuevoServer3->url = $request->input('url');
+        $nuevoServer3->save();
 
        //retornar a la pagina con listado completo
         $listadoServidores = Server::all();
