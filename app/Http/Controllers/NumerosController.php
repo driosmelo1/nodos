@@ -15,14 +15,12 @@ class NumerosController extends Controller
 {
     public function index()
     {
-        $listadoNumeros = Numero::all();
-
-        $suma = 0;
-        foreach ($listadoNumeros as $n) {
-            $suma += $n->numero;
-        }
         $listadoServidores = Server::all();
-        return view('index')->with('listadoNumeros', $listadoNumeros)->with('listadoServidores', $listadoServidores)->with('suma',$suma);
+
+        $mostrarNumeroNodo = false;
+        return view('index')
+            ->with('listadoServidores', $listadoServidores)
+            ->with('mostrarNumeroNodo',$mostrarNumeroNodo);
     }
 
 
@@ -31,13 +29,30 @@ class NumerosController extends Controller
     public function guardarNumeroWeb(Request $request){
 
         $numeroNuevo = new Numero();
-
+        $numeroNuevo->nodo = $request->input('nodoSeleccionado');
         $numeroNuevo->numero = $request->input('numero');
         $numeroNuevo->save();
 
-        $listadoNumeros = Numero::all();
         $listadoServidores = Server::all();
-        return redirect('/')->with('listadoNumeros',$listadoNumeros)->with('listadoServidores',$listadoServidores);
+        $mostrarNumeroNodo = false;
+        return redirect('/')
+            ->with('listadoServidores',$listadoServidores)
+            ->with('mostrarNumeroNodo',$mostrarNumeroNodo);
+    }
+
+    public function ConsultarNodo(Request $request){
+        $NodosASumar = Numero::where('nodo', $request->input('nodoAConsultar'))->get();
+        $suma = 0;
+        foreach ($NodosASumar as $nodo) {
+            $suma += $nodo->numero;
+        }
+        $listadoServidores = Server::all();
+        $mostrarNumeroNodo = true;
+        return view('index')
+            ->with('listadoServidores',$listadoServidores)
+            ->with('NodoAMostrar',$request->input('nodoAConsultar'))
+            ->with('suma',$suma)
+            ->with('mostrarNumeroNodo',$mostrarNumeroNodo);
     }
 
     // Metodo que utilizamos cuando nos consultan los valores
@@ -144,9 +159,8 @@ class NumerosController extends Controller
         }
 
        //retornar a la pagina con listado completo
-        $listadoNumeros = Numero::all();
         $listadoServidores = Server::all();
-        return redirect('/')->with('listadoNumeros',$listadoNumeros)->with('listadoServidores',$listadoServidores);
+        return redirect('/')->with('listadoServidores',$listadoServidores);
     }
 
     // Metodo que almacen la URL recibida en la base de datos y los imprime en pantalla.
@@ -170,8 +184,7 @@ class NumerosController extends Controller
 
         $serverABorrar->delete();
 
-        $listadoNumeros = Numero::all();
         $listadoServidores = Server::all();
-        return redirect('/')->with('listadoNumeros',$listadoNumeros)->with('listadoServidores',$listadoServidores);
+        return redirect('/')->with('listadoServidores',$listadoServidores);
     }
 }

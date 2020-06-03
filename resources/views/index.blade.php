@@ -27,56 +27,70 @@
     <body>
         ip de este nodo:
         {{$_SERVER['REMOTE_ADDR']}}
-        <div class="flex-center position-ref full-height">
 
+        <div class="flex-center position-ref full-height">
+            <h1 style="text-align: center">NODOS</h1>
             <div class="container-fluid">
                 <div class="row">
-                <h1>NODOS</h1>
-                </div>
-                @if (count($listadoServidores) > 0)
-                <div class="col-6">
-                    <hr>
-                    <h2>Guardar Numero</h2>
-                    <br>
-                    {{ Form::open(array('url' => '/guardarNumero')) }}
-                        {{Form::label('numero_lbl', 'Ingresa el numero a guardar')}}
-                        <br>
-                        {{Form::number('numero')}}
-                        <br>
-
-                        {{Form::submit('Generar')}}
-                    {{ Form::close() }}
-
-                <br>
-                    <h2>listado Numeros</h2>
-                    <hr>
-                    @if (count($listadoNumeros) > 0)
-                    Cantidad de numeros Guardados: {{count($listadoNumeros)}}
-                    <br>
-                        @foreach ($listadoNumeros as $numero)
-                        id{{$numero->id}} -  Numero:{{$numero->numero}}
-                        <br>
-                        @endforeach
-                    @endif
-                    Total: {{$suma}}
-                </div>
-                @else
-                <div class="col-6">
-                    <h2>Antes de agregar un numero debes tener al menos este servidor agregado en la lista</h2>
-                    {{ Form::open(array('url' => '/guardarURL')) }}
-                            {{Form::label('url_lbl', 'Agregar '.$_SERVER['REMOTE_ADDR']. 'a la lista')}}
+                    <div class="col-md-6">
+                        @if (count($listadoServidores) > 0)
+                            <hr>
+                            <h2>Guardar Numero</h2>
                             <br>
-                            {{Form::text('url','http://'.$_SERVER['REMOTE_ADDR'].'/nodos/public/')}}
+                            {{ Form::open(array('url' => '/guardarNumero')) }}
+                                {{Form::label('numero_lbl', 'Ingresa el numero a guardar')}}
+                                <br>
+                                {{Form::number('numero')}}
+                                <br>
+                                {{Form::label('servidor_lbl', 'En que nodo se va a guardar')}}
+                                <br>
+                                <select name="nodoSeleccionado">
+                                    @for ($i = 1; $i < count($listadoServidores)+1; $i++)
+                                        @if ($i == 1)
+                                            <option value="{{$i}}" selected>Nodo {{$i}}</option>
+                                        @else
+                                            <option value="{{$i}}">Nodo {{$i}}</option>
+                                        @endif
+                                    @endfor
+                                </select>
+                                <br>
+                                {{Form::submit('Generar')}}
+                            {{ Form::close() }}
                             <br>
+                            <h2>listado Numeros</h2>
+                            <hr>
+                            @if ($mostrarNumeroNodo == 1)
+                                <p>Esto se muestra si consulto alguna sumatoria de algun nodo<br>
+                                    El valor total para el nodo {{$NodoAMostrar}} es : {{$suma}}</p>
+                            @else
+                                <h3>Selecciona el nodo a consultar</h3>
+                                <form method="get" action="/nodos/public/ConsultarNodo" >
+                                    <select name="nodoAConsultar">
+                                        @for ($i = 1; $i < count($listadoServidores)+1; $i++)
+                                            @if ($i == 1)
+                                                <option value="{{$i}}" selected>Nodo {{$i}}</option>
+                                            @else
+                                                <option value="{{$i}}">Nodo {{$i}}</option>
+                                            @endif
+                                        @endfor
+                                    </select>
+                                    <input type="submit" value="Consultar">
+                                </form>
+                            @endif
 
-                            {{Form::submit('Guardase a si mismo')}}
-                        {{ Form::close() }}
-                </div>
-                @endif
+                        @else
+                            <h2>Antes de agregar un numero debes tener al menos este servidor agregado en la lista</h2>
+                            {{ Form::open(array('url' => '/guardarURL')) }}
+                                    {{Form::label('url_lbl', 'Agregar '.$_SERVER['REMOTE_ADDR']. 'a la lista')}}
+                                    <br>
+                                    {{Form::text('url','http://'.$_SERVER['REMOTE_ADDR'].'/nodos/public/')}}
+                                    <br>
 
-
-                <div class="row">
-                    <div class="col-6">
+                                    {{Form::submit('Guardase a si mismo')}}
+                                {{ Form::close() }}
+                        @endif
+                    </div>
+                    <div class="col-md-6">
                         <hr>
                         <h2>Guardar nuevo servidor o url para consulta de sumas</h2>
                         <br>
@@ -89,7 +103,7 @@
                             {{Form::submit('Guardar')}}
                         {{ Form::close() }}
 
-                    <br>
+                        <br>
                         <h2>listado de servidores</h2>
                         <hr>
                         @if (count($listadoServidores) > 0)
@@ -107,8 +121,6 @@
                             {{Form::submit('GO')}}
                         {{ Form::close() }}
                     </div>
-
-
                 </div>
             </div>
         </div>

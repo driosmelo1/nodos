@@ -18,7 +18,10 @@ Route::post('/guardarNumero', 'NumerosController@guardarNumeroWeb');
 
 Route::POST('/guardarURL', 'NumerosController@guardarURL');
 Route::get('/guardarNuevoNodo/{ip}/', 'NumerosController@guardarNuevoNodo');
-//Route::get('/borraURL', 'NumerosController@borrarURL');
+
+
+Route::get('/ConsultarNodo', 'NumerosController@ConsultarNodo');
+
 Route::get('/borraURL/{id}/', [
     'as' => 'borraURL', 'uses' => 'NumerosController@borrarURL']);
 Route::get('/suma', 'NumerosController@retornaSumaNumeros');
